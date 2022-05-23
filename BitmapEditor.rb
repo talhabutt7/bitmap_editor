@@ -2,34 +2,18 @@ class BitmapEditor
   # Constants
   BLANK_PIXEL = 'O'
   MAX_SIZE = 250
-  # Initialise the class as the program hasn't started yet
-  @running = false
+  # Initialise the empty image
+  @io = nil
   @image = nil
-
-  # Start the program running
-  # @public
-  # @return void
-  def start
-    @running = true
-    puts 'Welcome to Bitmap Editor'
-    puts 'type ? for help'
-    # Keep looping until the user ends the program
-    while @running
-      print '> '
-      # Get the input from the user
-      input = gets.chomp
-      output = call(input)
-      if (output != "")
-        puts output
-      end
-    end
+  def initialize(io)
+    @io = io
   end
   # Make a call to the private functions below based on user input
   # and returns the result to print to the screen
   # @public
   # @param input - The unformatted raw input string
   # @return string
-  def call(input)
+  def process(input)
     first_char = input[0, 1].capitalize
     cmd = Commands.new(first_char, self)
     cmd.run(input)
@@ -40,21 +24,20 @@ class BitmapEditor
   # @param args - The array of string arguments
   # @return string
   def new_image(args)
-
+    # x and y must be numbers
+    if !Utils.is_numeric([args[0], args[1]])
+      return "X and Y must both be numbers"
+    end
     width = args[0].to_i
     height = args[1].to_i
-
     if width < 1 || height < 1
       return "The image must be at minimum 1x1"
     end
-
     if width > MAX_SIZE || height > MAX_SIZE
       return "The maximum width and height is " + MAX_SIZE.to_s
     end
-
     @image = Image.new(width, height)
     return clear_image
-
   end
   # Replaces all the pixels in the image by an O
   # @private
@@ -64,15 +47,13 @@ class BitmapEditor
     @image.fill(BLANK_PIXEL)
     return ""
   end
-
   # Sets the colour of one pixel
   # @param args - The array containing the X, Y and colour
   # @return string
   def set_pixel_colour(args)
     return image_created if image_created != ""
     # x and y must be numbers
-    if !Utils.is_numeric(args[0]) ||
-      !Utils.is_numeric(args[1])
+    if !Utils.is_numeric([args[0], args[1]])
       return "X and Y must both be numbers"
     end
     # Get the integer values of X and Y
@@ -81,29 +62,27 @@ class BitmapEditor
     y = args[1].to_i - 1
     # Must be a valid colour
     col = args[2]
-    if !Utils.is_valid_colour(col)
+    if !Utils.is_uppercase_char(col)
       return "Colours must be capital letters"
     end
 
     # x and y must be valid bounds within the image
-    if Utils.is_bounded(x, 0, @image.getWidth - 1) &&
-      Utils.is_bounded(y, 0, @image.getHeight - 1)
+    if @image.fits_width(x) && @image.fits_height(y)
       @image.set(x, y, col)
     else
       return "You entered a pixel which isn't in the image"
     end
     return ""
   end
-
   def draw_horizontal
     return draw_line("H", args)
   end
-
   def draw_vertical(args)
     return draw_line("V", args)
   end
-
-
+  def no_command
+    return "Please type a valid command, type ? for help"
+  end
   # Draws either a horizontal or vertical line across the image
   # @param type - A string either 'H' or 'V'
   # @param args - The array containing the X1/X2, Y1/Y2 and colour
@@ -111,14 +90,12 @@ class BitmapEditor
   def draw_line(type, args)
     return image_created if image_created != ""
     # x and y values must be numbers
-    if !Utils.is_numeric(args[0]) ||
-      !Utils.is_numeric(args[1]) ||
-      !Utils.is_numeric(args[2])
+    if !Utils.is_numeric([args[0], args[1], args[2]])
       return "X and Y values must be numbers"
     end
     # Must be a valid colour
     col = args[3]
-    if !Utils.is_valid_colour(col)
+    if !Utils.is_uppercase_char(col)
       return "Colours must be capital letters"
     end
     # Generic variable names as we are covering for both
@@ -129,22 +106,16 @@ class BitmapEditor
     num3 = args[2].to_i - 1
 
     if type == "V"
-      if !Utils.is_bounded(num1, 0, @image.getWidth - 1) ||
-        !Utils.is_bounded(num2, 0, @image.getHeight - 1) ||
-        !Utils.is_bounded(num3, 0, @image.getHeight - 1)
+      if !@image.fits_width(num1) || !@image.fits_height(num2) || !@image.fits_height(num3)
         return "You entered a pixel which isn't in the image"
       end
     elsif type == "H"
-      if !Utils.is_bounded(num1, 0, @image.getWidth - 1) ||
-        !Utils.is_bounded(num2, 0, @image.getWidth - 1) ||
-        !Utils.is_bounded(num3, 0, @image.getHeight - 1)
+      if !@image.fits_width(num1) || !@image.fits_width(num2) || !@image.fits_height(num3)
         return "You entered a pixel which isn't in the image"
       end
     end
-
     @image.line(type, num1, num2, num3, col)
     return ""
-
   end
   # Prints the image to the screen
   # @private
@@ -153,7 +124,6 @@ class BitmapEditor
     return image_created if image_created != ""
     return @image.show
   end
-
   # Check that an image has been created
   # @private
   # @return string
@@ -168,7 +138,7 @@ class BitmapEditor
   # @private
   # @return string
   def exit_console
-    @running = false
+    @io.stop
     return "Thanks for running the program!"
   end
   # Prints help text

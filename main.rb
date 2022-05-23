@@ -1,8 +1,9 @@
+require_relative 'IOManager'
 require_relative 'Commands'
 require_relative 'Image'
 require_relative 'Utils'
 require_relative 'BitmapEditor'
 
-# Create a new instance of the bitmap editor and start the program
-b = BitmapEditor.new
-b.start
+# Create a new instance of the IO handler
+# and start the program
+IOManager.new.start
