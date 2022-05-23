@@ -111,9 +111,9 @@ class BitmapEditor
       end
 
       # x and y must be valid bounds within the image
-      if x >= @width || x < 0 || y >= @height || y < 0
-        puts "This pixel doesn't exist"
-        return
+      if Utils.is_bounded(x, 0, @width - 1) &&
+        Utils.is_bounded(y, 0, @height - 1)
+        @image[y][x] = col
       end
 
       @image[y][x] = col
@@ -151,20 +151,30 @@ class BitmapEditor
         for x in 0..(@width-1)
 
           if type == "V"
-            if x == num1 && y >= num2 && y <= num3
-              @image[y][x] = col
+            if Utils.is_bounded(num1, 0, @width - 1) &&
+              Utils.is_bounded(num2, 0, @height - 1) &&
+              Utils.is_bounded(num3, 0, @height - 1)
+              if x == num1 && y >= num2 && y <= num3
+                @image[y][x] = col
+              end
+            else
+              return
             end
           elsif type == "H"
-            if x >= num1 && x <= num2 && y == num3
-              @image[y][x] = col
+            if Utils.is_bounded(num1, 0, @width - 1) &&
+              Utils.is_bounded(num2, 0, @width - 1) &&
+              Utils.is_bounded(num3, 0, @height - 1)
+              if x >= num1 && x <= num2 && y == num3
+                @image[y][x] = col
+              end
+            else
+              return
             end
           end
 
         end
       end
-
     end
-
   end
 
 
