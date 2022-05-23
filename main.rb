@@ -1,6 +1,6 @@
 require_relative 'IOManager'
 require_relative 'Commands'
-require_relative 'Image'
+require_relative 'Canvas'
 require_relative 'Utils'
 require_relative 'BitmapEditor'
 

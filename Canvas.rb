@@ -1,29 +1,35 @@
-class Image
-  # Properties of an image
+class Canvas
+
+  # Properties of an canvas
   @data = nil
   @width = 0
   @height = 0
-  # Creates a new image
+
+  # Creates a new canvas
   # @public
   # @return void
   def initialize(width, height)
     @width = width
     @height = height
+
     # Create a new 2-dimensional array
     @data = Array.new(@height) { Array.new(@width) }
   end
-  # Gets the width of an image
+
+  # Gets the width of an canvas
   # @public
   # @return integer
   def getWidth
     return @width
   end
-  # Gets the height of an image
+
+  # Gets the height of an canvas
   # @public
   # @return integer
   def getHeight
     return @height
   end
+
   # Fill all the pixels in an with a given letter
   # @public
   # @param letter - The letter to replace all cells with
@@ -35,7 +41,9 @@ class Image
       end
     end
   end
-  Utilsublic
+
+  # Set a given pixel at (x, y) to the letter
+  # @public
   # @param x - The x coordinate (zero-index)
   # @param y - The y coordinate (zero-index)
   # @param value - The value to put in the pixel
@@ -43,6 +51,7 @@ class Image
   def set(x, y, value)
     @data[y][x] = value
   end
+
   # Set a given pixel at (x, y) to the letter
   # @public
   # @param type - Either 'V' or 'H'
@@ -64,7 +73,8 @@ class Image
       end
     end
   end
-  # Returns the string representation of the image
+
+  # Returns the string representation of the canvas
   # @public
   # @return string
   def show
@@ -78,7 +88,7 @@ class Image
     return output.strip
   end
 
-  # Checks whether the value fits in image width size
+  # Checks whether the value fits in canvas width size
   # @public
   # @param val - The number to check
   # @return boolean
@@ -86,7 +96,7 @@ class Image
     return is_bounded(val, 0, @width - 1)
   end
 
-  # Checks whether the value fits in image height size
+  # Checks whether the value fits in canvas height size
   # @public
   # @param val - The number to check
   # @return boolean

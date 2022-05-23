@@ -1,17 +1,17 @@
 require_relative "../IOManager"
 require_relative "../Commands"
-require_relative "../Image"
+require_relative "../Canvas"
 require_relative "../Utils"
 require_relative "../BitmapEditor"
 
 describe BitmapEditor do
 
-  describe "#new_image" do
-    context "before intiailising the new image" do
-      it "should give an error when trying to print the image" do
+  describe "#new_canvas" do
+    context "before intiailising the new canvas" do
+      it "should give an error when trying to print the canvas" do
         bitmap = BitmapEditor.new(nil)
         message = bitmap.process("S")
-        expect(message).to eq "You haven't created an image yet"
+        expect(message).to eq "You haven't created an canvas yet"
       end
     end
   end

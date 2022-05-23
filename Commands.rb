@@ -4,18 +4,25 @@ class Commands
   # First element is the method call of BitmapEditor
   # Second element is the number of expected arguments
   @@cmd_data = {
-    'I' => ["new_image", 2],
-    'C' => ["clear_image", 0],
-    'S' => ["show_image", 0],
+    'I' => ["new_canvas", 2],
+    'C' => ["clear_canvas", 0],
+    'S' => ["show_canvas", 0],
     'L' => ["set_pixel_colour", 3],
     'V' => ["draw_vertical", 4],
     'H' => ["draw_horizontal", 4],
+    'F' => ["paint_region", 3],
     'X' => ["exit_console", 0],
     '?' => ["show_help", 0],
   }
 
   @@cmd_data.default = ["no_command", 0]
 
+  # Initialise a command
+  # Get the method call from the class specified
+  # @public
+  # @param command - The function/method name
+  # @param cls - The class holding the method
+  # @return void
   def initialize(command, cls)
     @command = command
     com_info = @@cmd_data[@command]
@@ -24,6 +31,10 @@ class Commands
     @method_call = cls.method(func_name)
   end
 
+  # Run the method from the class using the list of arguments
+  # @public
+  # @param args - The list of string arguments
+  # @return void
   def run(args)
     list_args = inputs(args)
     if @num_args > 0 && list_args.length != @num_args

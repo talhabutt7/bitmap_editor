@@ -1,4 +1,5 @@
 class IOManager
+
   @running = false
   # Start the program running
   # @public
