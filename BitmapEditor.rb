@@ -2,6 +2,7 @@ class BitmapEditor
 
   # Constants
   BLANK_PIXEL = 'O'
+  MAX_SIZE = 250
 
   # Initialise the class as the program hasn't started yet
   @running = false
@@ -57,6 +58,11 @@ class BitmapEditor
     # Convert the width and height arguments to integer
     @width = args[0].to_i
     @height = args[1].to_i
+
+    if @width > MAX_SIZE || @height > MAX_SIZE
+      puts "The maximum width and height is " + MAX_SIZE.to_s
+      return
+    end
 
     # Create a new 2-dimensional array
     # and clear the image
