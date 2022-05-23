@@ -40,6 +40,8 @@ class BitmapEditor
         clear_image
       when 'L'
         set_pixel_colour(args)
+      when 'H', 'V'
+        draw_line(first_char, args)
       when 'X'
         exit_console
       else
@@ -117,6 +119,52 @@ class BitmapEditor
       @image[y][x] = col
 
     end
+  end
+
+  def draw_line(type, args)
+
+    if image_created
+
+      # x and y values must be numbers
+      if !Utils.is_numeric(args[0]) ||
+        !Utils.is_numeric(args[1]) ||
+        !Utils.is_numeric(args[2])
+        puts "X and Y values must be numbers"
+        return
+      end
+
+      # Must be a valid colour
+      col = args[3]
+      if !Utils.is_valid_colour(col)
+        puts "Colours must be capital letters"
+        return
+      end
+
+      # Generic variable names as we are covering for both
+      # H and V in this function.
+      # Again, subtract 1 so that the first pixel is (1, 1)
+      num1 = args[0].to_i - 1
+      num2 = args[1].to_i - 1
+      num3 = args[2].to_i - 1
+
+      for y in 0..(@height-1)
+        for x in 0..(@width-1)
+
+          if type == "V"
+            if x == num1 && y >= num2 && y <= num3
+              @image[y][x] = col
+            end
+          elsif type == "H"
+            if x >= num1 && x <= num2 && y == num3
+              @image[y][x] = col
+            end
+          end
+
+        end
+      end
+
+    end
+
   end
 
 
