@@ -74,5 +74,5 @@ class Utils
     return true
 
   end
-  
+
 end
