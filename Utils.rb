@@ -51,4 +51,28 @@ class Utils
     end
   end
 
+  def self.number_args(cmd, args)
+
+    expected_args = 0
+
+    case cmd
+    when 'I'
+      expected_args = 2
+    when 'L'
+      expected_args = 3
+    when 'H', 'V'
+      expected_args = 4
+    end
+
+    # Only worry if expected_args > 0 and it doesn't match
+    if expected_args > 0 && args.length != expected_args
+      puts "You should only enter " + expected_args.to_s +
+             " value(s) after the '" + cmd + "'"
+      return false
+    end
+
+    return true
+
+  end
+  
 end

@@ -29,24 +29,30 @@ class BitmapEditor
       # Call a utiltity function to break down the white-spaced inputs
       # into an array of strings
       args = Utils.analyse_input(input)
-      case first_char
-      when '?'
-        show_help
-      when 'I'
-        new_image(args)
-      when 'S'
-        show_image
-      when 'C'
-        clear_image
-      when 'L'
-        set_pixel_colour(args)
-      when 'H', 'V'
-        draw_line(first_char, args)
-      when 'X'
-        exit_console
-      else
-        puts "Unrecognised Command '#{input}"
+      # Check the correct number of arguments
+      if Utils.number_args(first_char, args)
+
+        case first_char
+        when '?'
+          show_help
+        when 'I'
+          new_image(args)
+        when 'S'
+          show_image
+        when 'C'
+          clear_image
+        when 'L'
+          set_pixel_colour(args)
+        when 'H', 'V'
+          draw_line(first_char, args)
+        when 'X'
+          exit_console
+        else
+          puts 'Unrecognised command "' + input + '"'
+        end
+
       end
+
     end
   end
   private
