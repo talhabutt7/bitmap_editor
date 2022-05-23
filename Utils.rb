@@ -22,4 +22,8 @@ class Utils
     return /[[:upper:]]/.match(col)
   end
 
+  def self.is_numeric(val)
+    return val.to_f.to_s == val.to_s || val.to_i.to_s == val.to_s
+  end
+
 end
