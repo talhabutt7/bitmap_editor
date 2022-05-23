@@ -74,9 +74,11 @@ class BitmapEditor
   # @private
   # @return void
   def clear_image
-    for y in 0..(@height-1)
-      for x in 0..(@width-1)
-        @image[y][x] = BLANK_PIXEL
+    if image_created
+      for y in 0..(@height-1)
+        for x in 0..(@width-1)
+          @image[y][x] = BLANK_PIXEL
+        end
       end
     end
   end
@@ -86,42 +88,44 @@ class BitmapEditor
   # @return void
   def set_pixel_colour(args)
 
-    # x and y must be numbers
-    if !Utils.is_numeric(args[0]) || !Utils.is_numeric(args[1])
-      puts "X and Y must both be numbers"
-      return
+    if image_created
+
+      # x and y must be numbers
+      if !Utils.is_numeric(args[0]) || !Utils.is_numeric(args[1])
+        puts "X and Y must both be numbers"
+        return
+      end
+
+      # Get the integer values of X and Y
+      # and subtract 1 so that the first pixel is (1, 1)
+      x = args[0].to_i - 1
+      y = args[1].to_i - 1
+
+      # Must be a valid colour
+      col = args[2]
+      if !Utils.is_valid_colour(col)
+        puts "Colours must be capital letters"
+        return
+      end
+
+      # x and y must be valid bounds within the image
+      if x >= @width || x < 0 || y >= @height || y < 0
+        puts "This pixel doesn't exist"
+        return
+      end
+
+      @image[y][x] = col
+
     end
-
-    # Get the integer values of X and Y
-    # and subtract 1 so that the first pixel is (1, 1)
-    x = args[0].to_i - 1
-    y = args[1].to_i - 1
-
-    # Must be a valid colour
-    col = args[2]
-
-    if !Utils.is_valid_colour(col)
-      puts "Colours must be capital letters"
-      return
-    end
-
-    # x and y must be valid bounds within the image
-    if x >= @width || x < 0 || y >= @height || y < 0
-      puts "This pixel doesn't exist"
-      return
-    end
-
-    @image[y][x] = col
-
   end
+
 
   # Prints the image to the screen
   # @private
   # @return void
   def show_image
-    if @image == nil
-      puts "You haven't created an image yet"
-    else
+    if image_created
+
       for y in 0..(@image.length-1)
         for x in 0..(@image[y].length-1)
           print @image[y][x]
@@ -130,6 +134,20 @@ class BitmapEditor
       end
     end
   end
+
+  # Check that an image has been created
+  # @private
+  # @return boolean
+  def image_created
+    if @image == nil
+      puts "You haven't created an image yet"
+      return false
+    else
+      return true
+    end
+  end
+
+
   # Exits the program
   # @private
   # @return void
