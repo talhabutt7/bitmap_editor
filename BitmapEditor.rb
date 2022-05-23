@@ -1,10 +1,8 @@
 class BitmapEditor
-
   # Initialise the class as the program hasn't started yet
   @running = false
   @image = nil
   BLANK_PIXEL = 'O'
-
   # Start the program running
   # @public
   # @return void
@@ -13,7 +11,6 @@ class BitmapEditor
     @running = true
     puts 'Welcome to Bitmap Editor'
     puts 'type ? for help'
-
     # Keep looping until the user ends the program
     while @running
 
@@ -32,6 +29,10 @@ class BitmapEditor
         new_image(args)
       when 'S'
         show_image
+      when 'C'
+        clear_image
+      when 'L'
+        set_pixel_colour(args)
       when 'X'
         exit_console
       else
@@ -43,7 +44,7 @@ class BitmapEditor
 
   # Create a new bitmap in the class
   # @private
-  # @params args - The array of string arguments
+  # @param args - The array of string arguments
   # @return void
   def new_image(args)
 
@@ -52,11 +53,11 @@ class BitmapEditor
     height = args[1].to_i
 
     # Create a new 2-dimensional array
+    # and clear the image
     @image = Array.new(height) { Array.new(width) }
     clear_image
 
   end
-
   # Replaces all the pixels in the image by an O
   # @private
   # @return void
@@ -66,6 +67,22 @@ class BitmapEditor
         @image[y][x] = BLANK_PIXEL
       end
     end
+  end
+
+  # Sets the colour of one pixel
+  # @param args - The array containing the X, Y and colour
+  # @return void
+  def set_pixel_colour(args)
+
+    # Get the integer values of X and Y
+    # and subtract 1 so that the first pixel is (1, 1)
+    x = args[0].to_i - 1
+    y = args[1].to_i - 1
+
+    col = args[2]
+
+    @image[y][x] = col
+
   end
 
   # Prints the image to the screen
@@ -83,7 +100,6 @@ class BitmapEditor
       end
     end
   end
-
   # Exits the program
   # @private
   # @return void
@@ -103,5 +119,4 @@ class BitmapEditor
            "S - Show the contents of the current canvas \n" +
            "X - Terminate the session"
   end
-
 end
